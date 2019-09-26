@@ -15,7 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from main.views import IssueListView, IssueDetailView, IssueCreateView, IssueDeleteView
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', IssueListView.as_view(), name='index'),
+    path('issue_view/<int:pk>', IssueDetailView.as_view(), name='view'),
+    path('issue/create', IssueCreateView.as_view(), name='issue_create'),
+    path('issue/<int:pk>/delete', IssueDeleteView.as_view(), name='del_issue'),
+
+
 ]
+urlpatterns += staticfiles_urlpatterns()

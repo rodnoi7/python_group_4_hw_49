@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Удалить задачу{% endblock %}
+{% block content %}
+    <h1>Удаление задачи</h1>
+    <h5>Вы уверены, что хотите удалить проект {{ issue.sumarry }}?</h5>
+    <form action="{% url 'del_issue' issue.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn, btn-primary">Удалить</button>
+        <button type="submit" class="btn, btn-primary">Отмена</button>
+    </form>
+{% endblock %}

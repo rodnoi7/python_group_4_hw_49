@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Задачи{% endblock %}
+{% block content %}
+    <div class="mt-3">
+        {% for issue in issue_list %}
+            <a href="{% url 'view' issue.pk %}">{{ issue.summary }}</a>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

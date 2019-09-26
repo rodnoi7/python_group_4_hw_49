@@ -9,6 +9,9 @@ class Issue(models.Model):
 	issue_type = models.ForeignKey('Type', on_delete=models.PROTECT, related_name='issue', verbose_name='Тип')
 	created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
 
+	def __str__(self):
+		return '%s (%s)' % (self.summary, self.status)
+
 class Type(models.Model):
     issue_type = models.CharField(max_length=20, verbose_name='Тип задачи')
 
