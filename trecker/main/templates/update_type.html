@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Изменить задачу{% endblock %}
+{% block title %}Изменить тип{% endblock %}
 {% block content %}
-    <h1>Изменение задачу</h1>
-    <form action="{% url 'issue_update' issue.pk %}" method="post">
+    <h1>Изменение типа</h1>
+    <form action="{% url 'type_update' type.pk %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn, btn-primary">Сохранить</button>

@@ -16,6 +16,8 @@
         <ul class="menu ">
             <li class='align-top'><a href="{% url 'index' %}">Главная</a></li>
             <li class='align-top'><a href="{% url 'issue_create' %}">Добавить задачу</a></li>
+            <li class='align-top'><a href="{% url 'type_list' %}">Список типов задач</a></li>
+            <li class='align-top'><a href="{% url 'status_list' %}">Список статусов задач</a></li>
             {% block menu %}
             {% endblock %}
         </ul>

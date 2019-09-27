@@ -3,7 +3,7 @@
 {% block content %}
     <div class="mt-3">
         {% for issue in issue_list %}
-            <a href="{% url 'view' issue.pk %}">{{ issue.summary }}</a>
+            <a href="{% url 'view' issue.pk %}">{{ issue.summary }}</a> ({{ issue.status }})
             <hr>
         {% endfor %}
     </div>

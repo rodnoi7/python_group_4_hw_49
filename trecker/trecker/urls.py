@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import IssueListView, IssueDetailView, IssueCreateView, IssueDeleteView
+from main.views import IssueListView, IssueDetailView, IssueCreateView, IssueDeleteView, IssueUpdateView, TypeListView, TypeCreateView, StatusListView, StatusCreateView, StatusUpdateView, StatusDeleteView, TypeDeleteView, TypeUpdateView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
@@ -24,7 +24,14 @@ urlpatterns = [
     path('issue_view/<int:pk>', IssueDetailView.as_view(), name='view'),
     path('issue/create', IssueCreateView.as_view(), name='issue_create'),
     path('issue/<int:pk>/delete', IssueDeleteView.as_view(), name='del_issue'),
-
-
+    path('issue/<int:pk>/update', IssueUpdateView.as_view(), name='issue_update'),
+    path('types', TypeListView.as_view(), name='type_list'),
+    path('type/create', TypeCreateView.as_view(), name='add_type'),
+    path('status', StatusListView.as_view(), name='status_list'),
+    path('status/create', StatusCreateView.as_view(), name='add_status'),
+    path('status/<int:pk>/update', StatusUpdateView.as_view(), name='status_update'),
+    path('status/<int:pk>/delete', StatusDeleteView.as_view(), name='del_status'),
+    path('type/<int:pk>/update', TypeUpdateView.as_view(), name='type_update'),
+    path('type/<int:pk>/delete', TypeDeleteView.as_view(), name='del_type'),
 ]
 urlpatterns += staticfiles_urlpatterns()

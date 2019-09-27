@@ -5,7 +5,7 @@
     <h5>Вы уверены, что хотите удалить проект {{ issue.sumarry }}?</h5>
     <form action="{% url 'del_issue' issue.pk %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn, btn-primary">Удалить</button>
-        <button type="submit" class="btn, btn-primary">Отмена</button>
     </form>
+        <button type="submit" class="btn, btn-primary">Удалить</button>
+        <a href="{% url 'index' %}"><button type="submit" class="btn, btn-primary">Отмена</button></a>
 {% endblock %}
