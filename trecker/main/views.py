@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from main.models import Issue, Type, Status
-from django.http import HttpResponseRedirect
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, View
 from main.forms import IssueForm, TypeForm, StatusForm
-from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView,  DeleteView, UpdateView
+from django.urls import reverse_lazy, reverse
+from main.models import Issue, Type, Status
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 
@@ -19,18 +18,44 @@ class IssueCreateView(CreateView):
    model = Issue
    form_class = IssueForm
    template_name = 'add_issue.html'
-   success_url = reverse_lazy('index')    
+   success_url = reverse_lazy('index')
 
 class IssueDeleteView(DeleteView):
     model = Issue
     template_name = 'del_issue.html'
     success_url = reverse_lazy('index')
 
-class IssueUpdateView(UpdateView):
-    model = Issue
+class IssueUpdateView(View):
     form_class = IssueForm
     template_name = 'update_issue.html'
-    success_url = reverse_lazy('index')
+    model = Issue
+
+    def get(self, request, *args, **kwargs):
+        issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+        form = IssueForm(instance=issue)
+        context = {
+            'form': form,
+            'issue': issue
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+        form = IssueForm(instance=issue, data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form, **kwargs)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form, **kwargs):
+        form.save()
+        return redirect('view', pk=kwargs.get('pk'))
+
+    def form_invalid(self, form):
+        context = {
+            'form': form
+        }
+        return render(self.request, self.template_name, context)
 
 class TypeListView(ListView):
     model = Type

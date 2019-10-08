@@ -5,8 +5,8 @@
     <h5>Вы уверены, что хотите удалить тип {{ issue.sumarry }}?</h5>
     <form action="{% url 'del_type' type.pk %}" method="post">
         {% csrf_token %}
-    </form>
         <button type="submit" class="btn, btn-primary">Удалить</button>
+    </form>
         <a href="{% url 'type_list' %}"><button type="submit" class="btn, btn-primary">Отмена</button></a>
     <hr/>
     При существовании задачи с данным типом, тип задачи нельзя удалить

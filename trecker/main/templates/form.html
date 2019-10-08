@@ -1,13 +1,29 @@
+
 {% csrf_token %}
+<div>
+	<label>Title:</label><br/>
+	<input type="text" name="summary" value="{{ issue.summary }}"/><br/>
+</div>
 
-<label>Автор:</label><br/>
-<input type="text" name="author" value="{{ record.author }}"/><br/>
+<div>
+<label>Description:</label><br/>
+<input type="text" name="description" value="{{ issue.description }}"/><br/>
+</div>
 
-<label>Email автора:</label><br/>
-<input name="author_email" value='{{ record.author_email }}'/><br/>
+<div>
+<label>Status:</label><br/>
+    <select>
+    {% for status in statuses %}
+        <option name="status">{{ status }}</option>
+    {% endfor %}</select>
+</div>
 
-<label>Текст:</label><br/>
-<textarea type="text" name="text">{{ record.text }}</textarea><br/>
+<div>
+<label>Type:</label><br/>
+    <select>
+    {% for type in typies %}
+        <option name="issue_type">{{ type }}</option>
+    {% endfor %}</select>
+</div>
 <br/>
-
-<input type="submit" value="Send"/>
+<br/>

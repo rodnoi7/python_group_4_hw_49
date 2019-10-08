@@ -5,8 +5,8 @@
     <h5>Вы уверены, что хотите удалить статус {{ issue.sumarry }}?</h5>
     <form action="{% url 'del_status' status.pk %}" method="post">
         {% csrf_token %}
-    </form>
         <button type="submit" class="btn, btn-primary">Удалить</button>
+    </form>
         <a href="{% url 'status_list' %}"><button type="submit" class="btn, btn-primary">Отмена</button></a>
     <hr/>
     При существовании задачи с данным статусом статус нельзя удалить

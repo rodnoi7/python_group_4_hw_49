@@ -95,3 +95,7 @@ a:hover {
 .navbar {
     overflow: hidden;
 }
+
+.issue_block {
+    margin-top: 70px;
+}
