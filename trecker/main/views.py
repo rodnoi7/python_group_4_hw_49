@@ -20,10 +20,34 @@ class IssueCreateView(CreateView):
    template_name = 'add_issue.html'
    success_url = reverse_lazy('index')
 
-class IssueDeleteView(DeleteView):
-    model = Issue
+class IssueDeleteView(View):
+    delete_settings = True
+    form_class = IssueForm
     template_name = 'del_issue.html'
-    success_url = reverse_lazy('index')
+    model = Issue
+
+    if delete_settings:
+        def get(self, request, *args, **kwargs):
+            issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+            context = {
+                'issue': issue
+            }
+            return render(request, self.template_name, context)
+
+        def post(self, *args, **kwargs):
+            issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+            issue.delete()
+            return redirect('view', pk=kwargs.get('pk'))
+    else:
+        def post(self, *args, **kwargs):
+            issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+            issue.delete()
+
+
+
+
+
+
 
 class IssueUpdateView(View):
     form_class = IssueForm
@@ -114,11 +138,37 @@ class StatusDeleteView(DeleteView):
     template_name = 'del_status.html'
     success_url = reverse_lazy('status_list')
 
-class TypeUpdateView(UpdateView):
-    model = Type
+class TypeUpdateView(View):
     form_class = TypeForm
     template_name = 'update_type.html'
-    success_url = reverse_lazy('type_list')
+    model = Type
+
+    def get(self, request, *args, **kwargs):
+        type = get_object_or_404(Type, pk=kwargs.get('pk'))
+        form = TypeForm(instance=type)
+        context = {
+            'form': form,
+            'type': type
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        type = get_object_or_404(Type, pk=kwargs.get('pk'))
+        form = TypeForm(instance=type, data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form, **kwargs)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form, **kwargs):
+        form.save()
+        return redirect('type_list')
+
+    def form_invalid(self, form):
+        context = {
+            'form': form
+        }
+        return render(self.request, self.template_name, context)
 
 class TypeDeleteView(DeleteView):
     model = Type
