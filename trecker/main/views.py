@@ -77,11 +77,37 @@ class StatusCreateView(CreateView):
    template_name = 'add_status.html'
    success_url = reverse_lazy('status_list')
 
-class StatusUpdateView(UpdateView):
-    model = Status
+class StatusUpdateView(View):
     form_class = StatusForm
     template_name = 'update_status.html'
-    success_url = reverse_lazy('status_list')
+    model = Status
+
+    def get(self, request, *args, **kwargs):
+        status = get_object_or_404(Status, pk=kwargs.get('pk'))
+        form = StatusForm(instance=status)
+        context = {
+            'form': form,
+            'status': status
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        status = get_object_or_404(Status, pk=kwargs.get('pk'))
+        form = StatusForm(instance=status, data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form, **kwargs)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form, **kwargs):
+        form.save()
+        return redirect('status_list')
+
+    def form_invalid(self, form):
+        context = {
+            'form': form
+        }
+        return render(self.request, self.template_name, context)
 
 class StatusDeleteView(DeleteView):
     model = Status
