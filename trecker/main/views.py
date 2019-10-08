@@ -21,33 +21,26 @@ class IssueCreateView(CreateView):
    success_url = reverse_lazy('index')
 
 class IssueDeleteView(View):
-    delete_settings = True
+    delete_settings = False
     form_class = IssueForm
     template_name = 'del_issue.html'
     model = Issue
 
-    if delete_settings:
-        def get(self, request, *args, **kwargs):
-            issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+    def get(self, request, *args, **kwargs):
+        issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+        if self.delete_settings:
             context = {
                 'issue': issue
             }
             return render(request, self.template_name, context)
-
-        def post(self, *args, **kwargs):
-            issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+        else:
             issue.delete()
-            return redirect('view', pk=kwargs.get('pk'))
-    else:
-        def post(self, *args, **kwargs):
-            issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
-            issue.delete()
+            return redirect('index')
 
-
-
-
-
-
+    def post(self, *args, **kwargs):
+        issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
+        issue.delete()
+        return redirect('index')
 
 class IssueUpdateView(View):
     form_class = IssueForm
@@ -133,10 +126,26 @@ class StatusUpdateView(View):
         }
         return render(self.request, self.template_name, context)
 
-class StatusDeleteView(DeleteView):
-    model = Status
+class StatusDeleteView(View):
+    delete_settings = False
+    form_class = StatusForm
     template_name = 'del_status.html'
-    success_url = reverse_lazy('status_list')
+    model = Status
+
+    def get(self, request, *args, **kwargs):
+        status = get_object_or_404(Status, pk=kwargs.get('pk'))
+        if self.delete_settings:
+            context = {
+                'status': status
+            }
+            return render(request, self.template_name, context)
+        else:
+            status.delete()
+            return redirect('status_list_list.html')
+
+    def post(self, *args, **kwargs):
+        status = get_object_or_404(Status, pk=kwargs.get('pk'))
+        status.delete()
 
 class TypeUpdateView(View):
     form_class = TypeForm
@@ -170,7 +179,23 @@ class TypeUpdateView(View):
         }
         return render(self.request, self.template_name, context)
 
-class TypeDeleteView(DeleteView):
-    model = Type
+class TypeDeleteView(View):
+    delete_settings = False
+    form_class = TypeForm
     template_name = 'del_type.html'
-    success_url = reverse_lazy('type_list')
+    model = Type
+
+    def get(self, request, *args, **kwargs):
+        type = get_object_or_404(Type, pk=kwargs.get('pk'))
+        if self.delete_settings:
+            context = {
+                'type': type
+            }
+            return render(request, self.template_name, context)
+        else:
+            type.delete()
+            return redirect('type_list.html')
+
+    def post(self, *args, **kwargs):
+        type = get_object_or_404(Type, pk=kwargs.get('pk'))
+        type.delete()

@@ -2,10 +2,10 @@
 {% block title %}Удалить задачу{% endblock %}
 {% block content %}
     <h1>Удаление задачи</h1>
-    <h5>Вы уверены, что хотите удалить проект {{ issue.sumarry }}?</h5>
+    <h5>Вы уверены, что хотите удалить проект {{ issue.summary }}?</h5>
     <form action="{% url 'del_issue' issue.pk %}" method="post">
         {% csrf_token %}
-    </form>
         <button type="submit" class="btn, btn-primary">Удалить</button>
-        <a href="{% url 'index' %}"><button type="submit" class="btn, btn-primary">Отмена</button></a>
+    </form>
+    <a href="{% url 'index' %}"><button type="submit" class="btn, btn-primary">Отмена</button></a>
 {% endblock %}
