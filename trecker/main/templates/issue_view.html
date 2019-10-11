@@ -6,6 +6,7 @@
     	Описание: {{ issue.description }}<br>
     	Статус: {{ issue.status }}<br>
     	Тип: {{ issue.issue_type }}<br>
+    	Проект: {{ issue.project }}<br>
     	Дата создания: {{ issue.created_at }}<br>
             <li class='align-top'><a href="{% url 'del_issue' issue.pk %}">Удалить задачу</a></li>
             <li class='align-top'><a href="{% url 'issue_update' issue.pk %}">Редактировать задачу</a></li>

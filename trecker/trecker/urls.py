@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import IssueListView, IssueDetailView, IssueCreateView, IssueDeleteView, IssueUpdateView, TypeListView, TypeCreateView, StatusListView, StatusCreateView, StatusUpdateView, StatusDeleteView, TypeDeleteView, TypeUpdateView
+from main.views import IssueListView, IssueDetailView, IssueCreateView, IssueDeleteView, IssueUpdateView, TypeListView, TypeCreateView, StatusListView, StatusCreateView, StatusUpdateView, StatusDeleteView, TypeDeleteView, TypeUpdateView, ProjectListView, ProjectCreateView, ProjectUpdateView, ProjectDeleteView, ProjectDetailView, DeactiveProjectListView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
@@ -33,5 +33,11 @@ urlpatterns = [
     path('status/<int:pk>/delete', StatusDeleteView.as_view(), name='del_status'),
     path('type/<int:pk>/update', TypeUpdateView.as_view(), name='type_update'),
     path('type/<int:pk>/delete', TypeDeleteView.as_view(), name='del_type'),
+    path('projects', ProjectListView.as_view(), name='project_list'),
+    path('project_view/<int:pk>', ProjectDetailView.as_view(), name='project_view'),
+    path('project/create', ProjectCreateView.as_view(), name='add_project'),
+    path('project/<int:pk>/update', ProjectUpdateView.as_view(), name='project_update'),
+    path('project/<int:pk>/delete', ProjectDeleteView.as_view(), name='del_project'),
+    path('deactive/projects', DeactiveProjectListView.as_view(), name='deactive_projects'),
 ]
 urlpatterns += staticfiles_urlpatterns()

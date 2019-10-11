@@ -1,7 +1,7 @@
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, View
-from main.forms import IssueForm, TypeForm, StatusForm
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from main.forms import IssueForm, TypeForm, StatusForm, ProjectForm
 from django.urls import reverse_lazy, reverse
-from main.models import Issue, Type, Status
+from main.models import Issue, Type, Status, Project
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
@@ -20,59 +20,20 @@ class IssueCreateView(CreateView):
    template_name = 'add_issue.html'
    success_url = reverse_lazy('index')
 
-class IssueDeleteView(View):
-    delete_settings = False
-    form_class = IssueForm
+class IssueDeleteView(DeleteView):
     template_name = 'del_issue.html'
     model = Issue
+    context_key = 'issue'
+    success_url = reverse_lazy('index')
 
-    def get(self, request, *args, **kwargs):
-        issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
-        if self.delete_settings:
-            context = {
-                'issue': issue
-            }
-            return render(request, self.template_name, context)
-        else:
-            issue.delete()
-            return redirect('index')
-
-    def post(self, *args, **kwargs):
-        issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
-        issue.delete()
-        return redirect('index')
-
-class IssueUpdateView(View):
-    form_class = IssueForm
-    template_name = 'update_issue.html'
+class IssueUpdateView(UpdateView):
     model = Issue
+    template_name = 'update_issue.html'
+    form_class = IssueForm
+    context_key = 'issue'
 
-    def get(self, request, *args, **kwargs):
-        issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
-        form = IssueForm(instance=issue)
-        context = {
-            'form': form,
-            'issue': issue
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        issue = get_object_or_404(Issue, pk=kwargs.get('pk'))
-        form = IssueForm(instance=issue, data=request.POST)
-        if form.is_valid():
-            return self.form_valid(form, **kwargs)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form, **kwargs):
-        form.save()
-        return redirect('view', pk=kwargs.get('pk'))
-
-    def form_invalid(self, form):
-        context = {
-            'form': form
-        }
-        return render(self.request, self.template_name, context)
+    def get_success_url(self):
+        return reverse('view', kwargs={'pk': self.object.pk})
 
 class TypeListView(ListView):
     model = Type
@@ -94,108 +55,71 @@ class StatusCreateView(CreateView):
    template_name = 'add_status.html'
    success_url = reverse_lazy('status_list')
 
-class StatusUpdateView(View):
-    form_class = StatusForm
-    template_name = 'update_status.html'
+class StatusUpdateView(UpdateView):
     model = Status
-
-    def get(self, request, *args, **kwargs):
-        status = get_object_or_404(Status, pk=kwargs.get('pk'))
-        form = StatusForm(instance=status)
-        context = {
-            'form': form,
-            'status': status
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        status = get_object_or_404(Status, pk=kwargs.get('pk'))
-        form = StatusForm(instance=status, data=request.POST)
-        if form.is_valid():
-            return self.form_valid(form, **kwargs)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form, **kwargs):
-        form.save()
-        return redirect('status_list')
-
-    def form_invalid(self, form):
-        context = {
-            'form': form
-        }
-        return render(self.request, self.template_name, context)
-
-class StatusDeleteView(View):
-    delete_settings = False
+    template_name = 'update_status.html'
     form_class = StatusForm
+    context_key = 'status'
+
+    def get_success_url(self):
+        return reverse('status_list')
+
+class StatusDeleteView(DeleteView):
     template_name = 'del_status.html'
     model = Status
+    context_key = 'status'
+    success_url = reverse_lazy('status_list')
 
-    def get(self, request, *args, **kwargs):
-        status = get_object_or_404(Status, pk=kwargs.get('pk'))
-        if self.delete_settings:
-            context = {
-                'status': status
-            }
-            return render(request, self.template_name, context)
-        else:
-            status.delete()
-            return redirect('status_list_list.html')
-
-    def post(self, *args, **kwargs):
-        status = get_object_or_404(Status, pk=kwargs.get('pk'))
-        status.delete()
-
-class TypeUpdateView(View):
-    form_class = TypeForm
-    template_name = 'update_type.html'
+class TypeUpdateView(UpdateView):
     model = Type
-
-    def get(self, request, *args, **kwargs):
-        type = get_object_or_404(Type, pk=kwargs.get('pk'))
-        form = TypeForm(instance=type)
-        context = {
-            'form': form,
-            'type': type
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        type = get_object_or_404(Type, pk=kwargs.get('pk'))
-        form = TypeForm(instance=type, data=request.POST)
-        if form.is_valid():
-            return self.form_valid(form, **kwargs)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form, **kwargs):
-        form.save()
-        return redirect('type_list')
-
-    def form_invalid(self, form):
-        context = {
-            'form': form
-        }
-        return render(self.request, self.template_name, context)
-
-class TypeDeleteView(View):
-    delete_settings = False
+    template_name = 'update_type.html'
     form_class = TypeForm
+    context_key = 'type'
+    redirect_url = 'type_list'
+
+class TypeDeleteView(DeleteView):
     template_name = 'del_type.html'
     model = Type
+    context_key = 'type'
+    success_url = reverse_lazy('type_list')
 
-    def get(self, request, *args, **kwargs):
-        type = get_object_or_404(Type, pk=kwargs.get('pk'))
-        if self.delete_settings:
-            context = {
-                'type': type
-            }
-            return render(request, self.template_name, context)
-        else:
-            type.delete()
-            return redirect('type_list.html')
+class ProjectListView(ListView):
+    model = Project
+    template_name = 'project_list.html'
 
-    def post(self, *args, **kwargs):
-        type = get_object_or_404(Type, pk=kwargs.get('pk'))
-        type.delete()
+    def get_context_data(self, **kwargs):
+        kwargs['projects'] = (Project.objects.filter(status='Active'))
+        return super().get_context_data(**kwargs)
+
+class DeactiveProjectListView(ListView):
+    model = Project
+    template_name = 'deact_projects.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['projects'] = (Project.objects.filter(status='Deactive'))
+        return super().get_context_data(**kwargs)
+
+class ProjectDetailView(DetailView):
+    model = Project
+    template_name = 'project_view.html'
+
+class ProjectCreateView(CreateView):
+   model = Project
+   form_class = ProjectForm
+   template_name = 'add_project.html'
+   success_url = reverse_lazy('project_list')
+
+class ProjectUpdateView(UpdateView):
+    model = Project
+    template_name = 'update_project.html'
+    form_class = ProjectForm
+    context_key = 'project'
+
+    def get_success_url(self):
+        return reverse('project_view', kwargs={'pk': self.object.pk})
+
+class ProjectDeleteView(DeleteView):
+    template_name = 'del_project.html'
+    model = Project
+    context_key = 'project'
+    success_url = reverse_lazy('project_list')
